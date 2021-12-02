@@ -452,7 +452,7 @@ function load() {
         window.open(`../character/#!/${this.charId}`, "_blank");
       },
       charImgUrl: function (charId) {
-        return `../assets/images/char/${charId}.png`;
+        return `https://aceship.github.io/AN-EN-Tags/img/avatars/${charId}.png`;
       },
       calculate: function () {
         this.plotList.forEach((x) => {

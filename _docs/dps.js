@@ -215,7 +215,7 @@ function load() {
           <tr>
             <td rowspan="3" style="padding: 0; width: 50%">
               <figure class="figure">
-                <img class="img_char figure-img" style="max-width: 75%; height: auto" data-index="${i}" src="/assets/images/char/char_504_rguard.png"></img>
+                <img class="img_char figure-img" style="max-width: 75%; height: auto" data-index="${i}" src="https://aceship.github.io/AN-EN-Tags/img/avatars/char_504_rguard.png"></img>
                 <figcaption class="figure-caption txt_char" style="max-width: 75%; font-weight:600; font-size: 1vw; color: #000; text-align: center;" data-index="${i}">-</figcaption>
               </figure>
             </td>
@@ -387,7 +387,10 @@ function load() {
 function selectChar(charId, i) {
   var name = AKDATA.Data.character_table[charId].name;
   $(`.txt_char:eq(${i})`).text(name);
-  $(`.img_char:eq(${i})`).attr("src", `/assets/images/char/${charId}.png`);
+  $(`.img_char:eq(${i})`).attr(
+    "src",
+    `https://aceship.github.io/AN-EN-Tags/img/avatars/${charId}.png`
+  );
   updateChar(charId, i);
 }
 
