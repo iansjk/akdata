@@ -113,7 +113,7 @@ function buildVueModel() {
     recom: {},
     jobs: 0,
     test: "",
-    img_char: "/akdata/assets/images/char/char_504_rguard.png",
+    img_char: "/assets/images/char/char_504_rguard.png",
     txt_char: "请选择",
     txt_gain_title: "提升率分布图 - 平均DPS",
     hash_args: "",
@@ -125,7 +125,7 @@ function showVersion() {
   AKDATA.checkVersion(function (ok, v) {
     var remote = `最新版本: ${v.akdata}, 游戏数据: ${v.gamedata} (${v.customdata})`;
     var local = `当前版本: ${AKDATA.Data.version.akdata}, 游戏数据: ${AKDATA.Data.version.gamedata} (${AKDATA.Data.version.customdata})`;
-    var whatsnew = `更新内容: ${v.whatsnew} <br> <a href='/akdata/whatsnew'>查看更新日志</a>`;
+    var whatsnew = `更新内容: ${v.whatsnew} <br> <a href='/whatsnew'>查看更新日志</a>`;
     if (!ok) {
       pmBase.component.create({
         type: 'modal',
@@ -149,7 +149,7 @@ function showReport() {
   var text = `
   - <a href="https://mew.fun/n/akmastery" target="_blank">Mew据点</a><br>
   - <a href="https://space.bilibili.com/274013" target="_blank">私信作者（B站）</a><br>
-  - <a href="https://github.com/xulai1001/akdata/issues" target="_blank">Github Issue</a><br>
+  - <a href="https://github.com/xulai1001/issues" target="_blank">Github Issue</a><br>
   感谢您的热心反馈！`;
   pmBase.component.create({
     type: 'modal',
@@ -277,7 +277,7 @@ function load() {
       changeChar: function(event) {
         if (AKDATA.Data.character_table[this.charId]) {
           this.resultView = calculate(this.charId);
-          this.img_char = `/akdata/assets/images/char/${this.charId}.png`;
+          this.img_char = `/assets/images/char/${this.charId}.png`;
           this.txt_char = AKDATA.Data.character_table[this.charId].name;
           if (this.resultView.rhodes) {
             $("#mats_table").text("集成战略临时干员");

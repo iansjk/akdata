@@ -131,7 +131,7 @@ function showVersion() {
   AKDATA.checkVersion(function (ok, v) {
     var remote = `最新版本: ${v.akdata}, 游戏数据: ${v.gamedata} (${v.customdata})`;
     var local = `当前版本: ${AKDATA.Data.version.akdata}, 游戏数据: ${AKDATA.Data.version.gamedata} (${AKDATA.Data.version.customdata})`;
-    var whatsnew = `更新内容: ${v.whatsnew} <br> <a href='/akdata/whatsnew'>查看更新日志</a>`;
+    var whatsnew = `更新内容: ${v.whatsnew} <br> <a href='/whatsnew'>查看更新日志</a>`;
     if (!ok) {
       pmBase.component.create({
         type: 'modal',
@@ -155,7 +155,7 @@ function showReport() {
   var text = `
   - <a href="https://bbs.nga.cn/read.php?tid=20083034" target="_blank">NGA帖子</a><br>
   - <a href="https://bbs.nga.cn/nuke.php?func=message#to=37501424" target="_blank">私信作者</a><br>
-  - <a href="https://github.com/xulai1001/akdata/issues" target="_blank">Github Issue</a><br>
+  - <a href="https://github.com/xulai1001/issues" target="_blank">Github Issue</a><br>
   感谢您的热心反馈！`;
   pmBase.component.create({
     type: 'modal',

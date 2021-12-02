@@ -1,29 +1,32 @@
-  const ProfessionNames = {
-  "PIONEER": "先锋",
-  "WARRIOR": "近卫",
-  "SNIPER": "狙击",
-  "TANK": "重装",
-  "MEDIC": "医疗",
-  "SUPPORT": "辅助",
-  "CASTER": "术师",
-  "SPECIAL": "特种",
-//  "TOKEN": "召唤物",
-//  "TRAP": "装置",
+const ProfessionNames = {
+  PIONEER: "先锋",
+  WARRIOR: "近卫",
+  SNIPER: "狙击",
+  TANK: "重装",
+  MEDIC: "医疗",
+  SUPPORT: "辅助",
+  CASTER: "术师",
+  SPECIAL: "特种",
+  //  "TOKEN": "召唤物",
+  //  "TRAP": "装置",
 };
-const DamageColors = ['black','blue','limegreen','gold','aqua'];
+const DamageColors = ["black", "blue", "limegreen", "gold", "aqua"];
 
 function init() {
-  $('#update_prompt').text("正在载入角色数据，请耐心等待......");
-  AKDATA.load([
-    'excel/character_table.json',
-    'excel/char_patch_table.json',
-    'excel/skill_table.json',
-    '../version.json',
-    '../customdata/dps_specialtags_v2.json',
-    '../customdata/dps_options.json',
-    '../resources/dpsv2.js',
-    '../resources/dps_actions.js'
-  ], load);
+  $("#update_prompt").text("正在载入角色数据，请耐心等待......");
+  AKDATA.load(
+    [
+      "excel/character_table.json",
+      "excel/char_patch_table.json",
+      "excel/skill_table.json",
+      "../version.json",
+      "../customdata/dps_specialtags_v2.json",
+      "../customdata/dps_options.json",
+      "../resources/dpsv2.js",
+      "../resources/dps_actions.js",
+    ],
+    load
+  );
 }
 
 const charColumnCount = $(document).width() <= 1400 ? 2 : 4;
@@ -35,7 +38,7 @@ markdown.setOption("headerLevelStart", 4);
 markdown.setOption("tables", true);
 markdown.setOption("tablesHeaderId", true);
 
-pmBase.hook.on('init', init);
+pmBase.hook.on("init", init);
 
 // build html
 let page_html = `
@@ -244,7 +247,10 @@ let page_html = `
 
 function getHashCode(obj) {
   var str = JSON.stringify(obj, null, 2);
-  return str.split("").reduce(function(a, b) {a=((a<<5)-a)+b.charCodeAt(0); return a&a}, 0);
+  return str.split("").reduce(function (a, b) {
+    a = (a << 5) - a + b.charCodeAt(0);
+    return a & a;
+  }, 0);
 }
 
 var charDB, skillDB, optionDB;
@@ -253,16 +259,16 @@ var charDB, skillDB, optionDB;
 function buildVueModel() {
   let version = AKDATA.Data.version;
   let charList = {}; // 选人菜单内容
-  let plotList = [];  // 图表里的人物信息
+  let plotList = []; // 图表里的人物信息
   charDB = AKDATA.Data.character_table;
   skillDB = AKDATA.Data.skill_table;
   optionDB = AKDATA.Data.dps_options;
 
-  Object.keys(ProfessionNames).forEach(key => {
+  Object.keys(ProfessionNames).forEach((key) => {
     var arr = [];
     for (let charId in charDB) {
-        var char = charDB[charId];
-        if (char.profession == key) arr.push({"name": char.name, "charId": charId});
+      var char = charDB[charId];
+      if (char.profession == key) arr.push({ name: char.name, charId: charId });
     }
     charList[ProfessionNames[key]] = arr;
   });
@@ -279,9 +285,24 @@ function buildVueModel() {
     opt_options: [],
     charId: "-",
     test: {},
-    details: { phase: 2, level: 90, potential: 5, skillId: "-", skillLevel: 9, favor: 200, options: [] },
+    details: {
+      phase: 2,
+      level: 90,
+      potential: 5,
+      skillId: "-",
+      skillLevel: 9,
+      favor: 200,
+      options: [],
+    },
     enemy: { def: 0, magicResistance: 0, count: 1 },
-    raidBuff: { atk: 0, atkpct: 0, ats: 0, cdr: 0, base_atk: 0, damage_scale: 0},
+    raidBuff: {
+      atk: 0,
+      atkpct: 0,
+      ats: 0,
+      cdr: 0,
+      base_atk: 0,
+      damage_scale: 0,
+    },
     resultCache: {},
     calcCache: {},
     chartView: [],
@@ -292,19 +313,19 @@ function showVersion() {
   AKDATA.checkVersion(function (ok, v) {
     var remote = `最新版本: ${v.akdata}, 游戏数据: ${v.gamedata} (${v.customdata})`;
     var local = `当前版本: ${AKDATA.Data.version.akdata}, 游戏数据: ${AKDATA.Data.version.gamedata} (${AKDATA.Data.version.customdata})`;
-    var whatsnew = `更新内容: ${v.whatsnew} <br> <a href='/akdata/whatsnew'>查看更新日志</a>`;
+    var whatsnew = `更新内容: ${v.whatsnew} <br> <a href='/whatsnew'>查看更新日志</a>`;
     if (!ok) {
       pmBase.component.create({
-        type: 'modal',
+        type: "modal",
         id: "update_prompt_modal",
         content: [remote, local, whatsnew].join("<br>"),
         width: 800,
         title: "有新数据，请点击[清除缓存]更新",
         show: true,
       });
-      $('#vue_version').html(["有新数据，请更新", remote, local].join("<br>"));
+      $("#vue_version").html(["有新数据，请更新", remote, local].join("<br>"));
     } else {
-      $('#vue_version').text(local);
+      $("#vue_version").text(local);
       $("#btn_update_data").text("手动刷新");
       $("#btn_update_data").attr("class", "btn btn-success");
     }
@@ -315,119 +336,132 @@ function showVersion() {
 function load() {
   showVersion();
   AKDATA.patchAllChars();
-  
+
   let $dps = $(page_html);
 
   pmBase.content.build({
-    pages: [{
-      content: $dps,
-    }]
+    pages: [
+      {
+        content: $dps,
+      },
+    ],
   });
 
   // setup vue
   window.model = buildVueModel();
   let vue_version = new Vue({
-    el: '#vue_version',
-    data: { 
+    el: "#vue_version",
+    data: {
       version: window.model.version,
-    }
-  });  
+    },
+  });
   window.vue_app = new Vue({
-    el: '#vue_app',
+    el: "#vue_app",
     data: window.model,
     methods: {
-      addChar: function() {
+      addChar: function () {
         if (charDB[this.charId]) {
-          var charInfo = {charId: this.charId, ...this.details};
+          var charInfo = { charId: this.charId, ...this.details };
           var hash = getHashCode(charInfo);
-          if (this.plotList.some(x => (getHashCode(x) == hash))) {
+          if (this.plotList.some((x) => getHashCode(x) == hash)) {
             alert("相同干员已经存在");
-          }
-          else 
-            this.plotList.push(charInfo);
+          } else this.plotList.push(charInfo);
         }
       },
-      delChar: function(index=-1) {
+      delChar: function (index = -1) {
         this.plotList.splice(index, 1);
       },
-      explainChar: function(char) {
+      explainChar: function (char) {
         // { charId, phase: 2, level: 90, potential: 5, skillId: "-", skillLevel: 9, options: [] }
         // console.log(char, char.options);
-        var levelStr = `精${char.phase} ${char.level}级, 潜能${char.potential+1} `;
-        var skillStr = skillDB[char.skillId] ? `${skillDB[char.skillId].levels[0].name} 等级${char.skillLevel+1}` : "";
-        var arr = char.options.map(x => optionDB.tags[x].displaytext);
-        if (arr.includes("计算团辅"))
-          arr.splice(arr.indexOf("计算团辅"));
+        var levelStr = `精${char.phase} ${char.level}级, 潜能${
+          char.potential + 1
+        } `;
+        var skillStr = skillDB[char.skillId]
+          ? `${skillDB[char.skillId].levels[0].name} 等级${char.skillLevel + 1}`
+          : "";
+        var arr = char.options.map((x) => optionDB.tags[x].displaytext);
+        if (arr.includes("计算团辅")) arr.splice(arr.indexOf("计算团辅"));
         else arr.push("不计算团辅");
-        var colorKey = arr.map(x => (
-          ["不计算团辅", "计算召唤物数据", "距离惩罚"].includes(x) ? "warning" : "info"));
-        return { name: charDB[char.charId].name, levelStr, skillStr,
-                 option: [...Array(arr.length).keys()].map(x =>
-                          `<span class="badge badge-${colorKey[x]}">${arr[x]}</span>`
-                          ).join("\n") };
+        var colorKey = arr.map((x) =>
+          ["不计算团辅", "计算召唤物数据", "距离惩罚"].includes(x)
+            ? "warning"
+            : "info"
+        );
+        return {
+          name: charDB[char.charId].name,
+          levelStr,
+          skillStr,
+          option: [...Array(arr.length).keys()]
+            .map(
+              (x) => `<span class="badge badge-${colorKey[x]}">${arr[x]}</span>`
+            )
+            .join("\n"),
+        };
       },
-      setChar: function(event) {
+      setChar: function (event) {
         let phases = charDB[this.charId].phases.length;
         this.opt_phase = [...Array(phases).keys()];
-        this.details.phase = phases-1;
+        this.details.phase = phases - 1;
         this.setPhase();
 
         var opts = [];
         if (optionDB.char[this.charId]) {
-          optionDB.char[this.charId].forEach(x => {
+          optionDB.char[this.charId].forEach((x) => {
             if (x != "crit")
               opts.push({ tag: x, text: optionDB.tags[x].displaytext });
           });
         }
-        opts.push({ tag: "buff", text: "计算团辅"});
+        opts.push({ tag: "buff", text: "计算团辅" });
         var sel_opts = [];
-        opts.forEach(x => {
-          if (x.tag != "token") sel_opts.push(x.tag);         
+        opts.forEach((x) => {
+          if (x.tag != "token") sel_opts.push(x.tag);
         });
         sel_opts.push("crit");
         this.opt_options = opts;
         this.details.options = sel_opts;
       },
-      setPhase: function(event) {
+      setPhase: function (event) {
         let maxLv = charDB[this.charId].phases[this.details.phase].maxLevel;
-        this.opt_level = [...Array(maxLv).keys()].map(x => x+1);
+        this.opt_level = [...Array(maxLv).keys()].map((x) => x + 1);
         this.details.level = maxLv;
         this.setSkill();
       },
-      setSkill: function() {
-        let skills=[], slv = 0;
+      setSkill: function () {
+        let skills = [],
+          slv = 0;
         charDB[this.charId].skills.forEach((skill, sid) => {
           if (this.details.phase >= skill.unlockCond.phase) {
             let name = skillDB[skill.skillId].levels[0].name;
-            skills.push({id: skill.skillId, name: name});
+            skills.push({ id: skill.skillId, name: name });
             slv = skillDB[skill.skillId].levels.length;
           }
         });
-        slv = Math.min(slv, this.details.phase*3 + 4);
-        if (slv == 0)
-          this.details.skillId = "-";
-        else
-          this.details.skillId = skills[skills.length-1].id;
+        slv = Math.min(slv, this.details.phase * 3 + 4);
+        if (slv == 0) this.details.skillId = "-";
+        else this.details.skillId = skills[skills.length - 1].id;
         this.opt_skill = skills;
         this.opt_skillLv = [...Array(slv).keys()];
-        this.details.skillLevel = slv-1;
+        this.details.skillLevel = slv - 1;
       },
-      debugPrint: function(obj) {
+      debugPrint: function (obj) {
         //console.log(JSON.stringify(obj, null, 2));
         return JSON.stringify(obj, null, 2);
       },
-      goto: function(event) {
-        window.open(`../character/#!/${this.charId}`, '_blank'); 
+      goto: function (event) {
+        window.open(`../character/#!/${this.charId}`, "_blank");
       },
       charImgUrl: function (charId) {
         return `../assets/images/char/${charId}.png`;
       },
       calculate: function () {
-        this.plotList.forEach(x => {
+        this.plotList.forEach((x) => {
           var args = buildArgs(x, this.enemy, this.raidBuff, this.enemyKey);
           var hash = getHashCode(args);
           if (!this.resultCache[hash]) {
-            console.log(`-- ${args.char.charId} | ${args.char.skillId} | #${hash} --`);
+            console.log(
+              `-- ${args.char.charId} | ${args.char.skillId} | #${hash} --`
+            );
             let calc = new AKDATA.Dps.DpsCalculator();
             calc.calculateDps(args.char, args.enemy, args.raidBuff);
             this.resultCache[hash] = calc.explain();
@@ -448,36 +482,54 @@ function load() {
             ret.n_color = DamageColors[ret.n_type];
 
             if (ret.g_hps != 0) {
-              ret.g_dps_title = (ret.g_dps == 0 ? "平均HPS" : "平均DPS/HPS");
-              ret.g_dps_text = (ret.g_dps == 0 ? Math.round(ret.g_hps) : `DPS: ${Math.round(ret.g_dps)}<br>HPS: ${Math.round(ret.g_hps)}`);
+              ret.g_dps_title = ret.g_dps == 0 ? "平均HPS" : "平均DPS/HPS";
+              ret.g_dps_text =
+                ret.g_dps == 0
+                  ? Math.round(ret.g_hps)
+                  : `DPS: ${Math.round(ret.g_dps)}<br>HPS: ${Math.round(
+                      ret.g_hps
+                    )}`;
 
-              ret.s_dps_title = (ret.s_dps == 0 ? "技能HPS" : "技能DPS/HPS");
-              ret.s_dps_text = (ret.s_dps == 0 ? Math.round(ret.s_hps) : `DPS: ${Math.round(ret.s_dps)}<br>HPS: ${Math.round(ret.s_hps)}`);
+              ret.s_dps_title = ret.s_dps == 0 ? "技能HPS" : "技能DPS/HPS";
+              ret.s_dps_text =
+                ret.s_dps == 0
+                  ? Math.round(ret.s_hps)
+                  : `DPS: ${Math.round(ret.s_dps)}<br>HPS: ${Math.round(
+                      ret.s_hps
+                    )}`;
 
-              ret.n_dps_title = (ret.n_dps == 0 ? "普攻HPS" : "普攻DPS/HPS");
-              ret.n_dps_text = (ret.n_dps == 0 ? Math.round(ret.n_hps) : `DPS: ${Math.round(ret.n_dps)}<br>HPS: ${Math.round(ret.n_hps)}`);
+              ret.n_dps_title = ret.n_dps == 0 ? "普攻HPS" : "普攻DPS/HPS";
+              ret.n_dps_text =
+                ret.n_dps == 0
+                  ? Math.round(ret.n_hps)
+                  : `DPS: ${Math.round(ret.n_dps)}<br>HPS: ${Math.round(
+                      ret.n_hps
+                    )}`;
 
-              ret.s_hit_title = (ret.s_dmg == 0 ? "技能单次治疗" : "技能DPH");
-              ret.s_dmg_title = (ret.s_dmg == 0 ? "技能总治疗" : "技能伤害/治疗");
-              ret.s_dmg_text = (ret.s_dmg == 0 ? Math.round(ret.s_heal) : `伤害: ${Math.round(ret.s_dmg)}<br>治疗: ${Math.round(ret.s_heal)}`);
+              ret.s_hit_title = ret.s_dmg == 0 ? "技能单次治疗" : "技能DPH";
+              ret.s_dmg_title = ret.s_dmg == 0 ? "技能总治疗" : "技能伤害/治疗";
+              ret.s_dmg_text =
+                ret.s_dmg == 0
+                  ? Math.round(ret.s_heal)
+                  : `伤害: ${Math.round(ret.s_dmg)}<br>治疗: ${Math.round(
+                      ret.s_heal
+                    )}`;
             }
-            
+
             ret.period_text = `技能: ${ret.s_rot.duration.toFixed(1)} s`;
             if (ret.s_rot.flags.warmup)
               ret.period_text = `技能: 永续<br>(以1800s计算)`;
-            else if (ret.s_rot.flags.passive)
-              ret.period_text = `技能: 被动`;
-            if (ret.s_rot.flags.auto)
-              ret.period_text += "<br>落地点火";
-            if (ret.s_rot.flags.instant)
-              ret.period_text += "<br>瞬发";
+            else if (ret.s_rot.flags.passive) ret.period_text = `技能: 被动`;
+            if (ret.s_rot.flags.auto) ret.period_text += "<br>落地点火";
+            if (ret.s_rot.flags.instant) ret.period_text += "<br>瞬发";
             ret.period_text += `<br>普攻: ${ret.n_rot.duration.toFixed(1)} s`;
-            ret.period_text += `<br>普攻命中: ${Math.round(ret.n_hitc + ret.n_hitcc)}`;
-            
+            ret.period_text += `<br>普攻命中: ${Math.round(
+              ret.n_hitc + ret.n_hitcc
+            )}`;
+
             if (ret.n_rot.flags.attack)
               ret.period_text += `<br>(${ret.n_rot.totalAttackCount} 次攻击)`;
-            else if (ret.n_rot.flags.hit)
-              ret.period_text += `<br>受击回复`;
+            else if (ret.n_rot.flags.hit) ret.period_text += `<br>受击回复`;
             if (ret.prep > 0) ret.period_text += `<br>准备: ${ret.prep} s`;
             if (ret.stun > 0) ret.period_text += `<br>晕眩: ${ret.stun} s`;
 
@@ -485,38 +537,42 @@ function load() {
             if (ret.s_rot.critAttackCount > 0)
               ret.s_hit_text += `<br>暴击: ${Math.round(ret.s_chit)}`;
 
-            ret.s_atk_text = `攻击力: ${Math.round(ret.s_atk)}<br>攻击 ${ret.s_rot.attackCount} 次, 命中 ${Math.round(ret.s_hitc)}`;
+            ret.s_atk_text = `攻击力: ${Math.round(ret.s_atk)}<br>攻击 ${
+              ret.s_rot.attackCount
+            } 次, 命中 ${Math.round(ret.s_hitc)}`;
             if (ret.s_rot.critAttackCount > 0)
-              ret.s_atk_text += `<br>暴击: ${Math.round(calc.skill.critAttr.finalFrame.atk)}<br>攻击 ${ret.s_rot.critAttackCount} 次, 命中 ${Math.round(ret.s_hitcc)}`;
+              ret.s_atk_text += `<br>暴击: ${Math.round(
+                calc.skill.critAttr.finalFrame.atk
+              )}<br>攻击 ${ret.s_rot.critAttackCount} 次, 命中 ${Math.round(
+                ret.s_hitcc
+              )}`;
           }
         });
       },
       getResult: function (x) {
         var args = buildArgs(x, this.enemy, this.raidBuff, this.enemyKey);
         var hash = getHashCode(args);
-        if (!this.resultCache[hash])
-          this.calculate();
+        if (!this.resultCache[hash]) this.calculate();
         return this.resultCache[hash];
       },
-      showDetail: function(x) {
+      showDetail: function (x) {
         var args = buildArgs(x, this.enemy, this.raidBuff, this.enemyKey);
         var hash = getHashCode(args);
         pmBase.component.create({
-          type: 'modal',
+          type: "modal",
           id: `detail_${hash}`,
-          content:  markdown.makeHtml(this.calcCache[hash].explainLog()).replace("table", 'table class="table"'),
+          content: markdown
+            .makeHtml(this.calcCache[hash].explainLog())
+            .replace("table", 'table class="table"'),
           width: 650,
           title: "伤害计算过程与详细数据",
-          show: true
+          show: true,
         });
-      }
+      },
     },
-    computed: {
-    },
-    watch: {
-    }
+    computed: {},
+    watch: {},
   });
-
 }
 
 // adapt info obj to calculateDps() function
@@ -529,18 +585,22 @@ function buildArgs(info, enemy, raidBuff) {
     favor: info.favor,
     potentialRank: info.potential,
     skillLevel: info.skillLevel,
-    options: {}
+    options: {},
   };
-  info.options.forEach(x => { char_obj.options[x] = true; });
+  info.options.forEach((x) => {
+    char_obj.options[x] = true;
+  });
   let enemy_obj = {
     def: parseFloat(enemy.def) || 0,
     magicResistance: parseFloat(enemy.magicResistance) || 0,
-    count: parseFloat(enemy.count) || 1
+    count: parseFloat(enemy.count) || 1,
   };
-  Object.keys(raidBuff).forEach(k => { raidBuff[k] = parseFloat(raidBuff[k]); });
+  Object.keys(raidBuff).forEach((k) => {
+    raidBuff[k] = parseFloat(raidBuff[k]);
+  });
   return {
     char: char_obj,
     enemy: enemy_obj,
-    raidBuff
+    raidBuff,
   };
 }
