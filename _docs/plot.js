@@ -286,7 +286,8 @@ function buildVueModel() {
     },
     resultCache: {},
     chartView: [],
-    img_char: "/assets/images/char/char_504_rguard.png",
+    img_char:
+      "https://aceship.github.io/AN-EN-Tags/img/avatars/char_504_rguard.png",
     txt_char: "请选择",
     jsonResult: {},
   };
@@ -411,7 +412,7 @@ function load() {
       setChar: function (event) {
         let phases = charDB[this.charId].phases.length;
         this.txt_char = charDB[this.charId].name;
-        this.img_char = `/assets/images/char/${this.charId}.png`;
+        this.img_char = `https://aceship.github.io/AN-EN-Tags/img/avatars/${this.charId}.png`;
         this.opt_phase = [...Array(phases).keys()];
         this.details.phase = phases - 1;
         this.setPhase();
