@@ -11,3 +11,4 @@ assets/images/prts/
 *.pyc
 */build/*
 resources/gamedata/story
+vendor/
