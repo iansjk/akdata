@@ -47,4 +47,5 @@ defaults:
       layout: "page"
 
 exclude:
+  - vendor
   - npm
