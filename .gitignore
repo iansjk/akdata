@@ -12,3 +12,4 @@ assets/images/prts/
 */build/*
 resources/gamedata/story
 vendor/
+.history
